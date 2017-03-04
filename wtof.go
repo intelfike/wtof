@@ -1,6 +1,7 @@
 package wtof
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -21,16 +22,18 @@ func New(iow io.Writer, bufsize int) *Wtof {
 			w.Close()
 			t.done <- nil
 		}()
-		b := make([]byte, bufsize)
+		// b := make([]byte, bufsize)
 		for {
-			i, err := w.Read(b)
+			_, err := bufio.NewReader(w).WriteTo(iow)
+			// i, err := w.Read(b)
 			if err != nil {
 				if err != io.EOF {
 					fmt.Println(err)
 				}
 				break
 			}
-			iow.Write(b[:i])
+			// iow.Write(b[:i])
+
 		}
 	}()
 	return t
