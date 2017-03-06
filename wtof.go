@@ -23,8 +23,10 @@ func New(iow io.Writer, bufsize int) *Wtof {
 			t.done <- nil
 		}()
 		// b := make([]byte, bufsize)
+		reader := bufio.NewReader(w)
+		writer := bufio.NewWriter(iow)
 		for {
-			_, err := bufio.NewReader(w).WriteTo(iow)
+			b, err := reader.ReadByte()
 			// i, err := w.Read(b)
 			if err != nil {
 				if err != io.EOF {
@@ -32,6 +34,7 @@ func New(iow io.Writer, bufsize int) *Wtof {
 				}
 				break
 			}
+			writer.WriteByte(b)
 			// iow.Write(b[:i])
 
 		}
